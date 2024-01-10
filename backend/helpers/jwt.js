@@ -11,10 +11,11 @@ function authJwt(){
     }).unless({
         path: [
             // MAKING ALL GET PRODUCTS API UNAUTHENTICATED
+        {url: /\/api\/v1\/uploads(.*)/ , methods: ['GET', 'OPTIONS']}, // images not requiring authentication or token
         {url: /\/api\/v1\/products(.*)/ , methods: ['GET', 'OPTIONS']},
         {url: /\/api\/v1\/categories(.*)/ , methods: ['GET', 'OPTIONS']},
             `${api}/users/login`,
-            // `${api}/users`,
+            // `${api}/orders`,
             `${api}/users/register`
         ]
     })

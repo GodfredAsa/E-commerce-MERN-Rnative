@@ -2,36 +2,38 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const mongoose = require('mongoose');
-const cors = require('cors');
-const authJwt = require('./helpers/jwt')
-const  errorHandler  = require('./helpers/error-handler')
+const mongoose = require("mongoose");
+const cors = require("cors");
+const authJwt = require("./helpers/jwt");
+const errorHandler = require("./helpers/error-handler");
 require("dotenv/config");
 app.use(cors());
-app.options('*', cors)
+app.options("*", cors);
 const api = process.env.API_URL;
 
 // middleware
 app.use(bodyParser.json()); // json converter
 app.use(morgan("tiny")); // logger
+// configuring upload images to show
+app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 app.use(authJwt());
 // handling error
-app.use(errorHandler)
+app.use(errorHandler);
 
-const categoriesRouter = require('./routers/category');
-const usersRouter = require('./routers/user');
+const categoriesRouter = require("./routers/category");
+const usersRouter = require("./routers/user");
 const ordersRouter = require("./routers/order");
 const productsRouter = require("./routers/product");
 
-// ROUTERS 
+// ROUTERS
 app.use(`${api}/products`, productsRouter);
 app.use(`${api}/categories`, categoriesRouter);
 app.use(`${api}/users`, usersRouter);
 app.use(`${api}/orders`, ordersRouter);
 
-
 // DB CONNECTION
-mongoose.connect(process.env.DB_CONNECTION_STRING, { })
+mongoose
+  .connect(process.env.DB_CONNECTION_STRING, {})
   .then(() => {
     console.log(process.env.DB_CONNECTION_READY);
   })
